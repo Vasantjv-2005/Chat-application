@@ -1,0 +1,5 @@
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://phsvatzlrhqljzzpzfri.supabase.co"
+
+export const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoc3ZhdHpscmhxbGp6enB6ZnJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk1MDc1NzUsImV4cCI6MjA3NTA4MzU3NX0.U8o_BEiwILGnulu4Rn9zKpZM5nE0bjixJbQnxAvY6cw"
