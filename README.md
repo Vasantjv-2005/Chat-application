@@ -49,9 +49,10 @@ Create `.env.local` with your Supabase project:
 ```
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
+NEXT_PUBLIC_SITE_URL=<http(s)://your-domain-or-http://localhost:3000>
 ```
 
-These are read by `lib/supabase/env.ts` and used by `lib/supabase/client.ts` and `lib/supabase/server.ts`.
+These are read by `lib/supabase/env.ts` and used by `lib/supabase/client.ts` and `lib/supabase/server.ts`. `NEXT_PUBLIC_SITE_URL` is used to build the `emailRedirectTo` for sign-up confirmation links (defaults to `window.location.origin` in the browser if not set).
 
 ## Database Setup (Supabase)
 
@@ -109,6 +110,17 @@ All routes require an authenticated session (via Supabase). The middleware touch
 - Messages don’t appear in realtime → ensure `messages` and `typing_indicators` are added to `supabase_realtime` publication; verify RLS policies; confirm both users belong to the chat.
 - Cannot search users → confirm Profiles RLS allows `select` for authenticated users.
 - Uploads failing → check bucket `chat-uploads` exists and is public (or adapt to signed URLs).
+
+### Supabase Auth: Email Confirmations not received
+
+- **[Enable email auth]** In Supabase Dashboard → Auth → Providers → Email, ensure Email provider is enabled and, if you require confirmation, "Confirm email" (double opt-in) is ON.
+- **[Configure SMTP or use Supabase managed]** In Auth → SMTP Settings, configure a valid SMTP provider or use Supabase managed (if available for your project/plan). Test sending a template from the dashboard.
+- **[Set URL configuration]** In Auth → URL Configuration:
+  - Site URL: set to your `NEXT_PUBLIC_SITE_URL` (e.g., `http://localhost:3000` for local dev, or your production domain).
+  - Authorized Redirect URLs: include `http://localhost:3000/onboarding` and your production `https://your-domain/onboarding`.
+- **[Match redirect in code]** The sign-up flow sets `emailRedirectTo` to `${NEXT_PUBLIC_SITE_URL}/onboarding` (or `window.location.origin` fallback). This must match one of your Authorized Redirect URLs.
+- **[Check spam and sender reputation]** Look in the spam folder and verify your SMTP sender/domain reputation and DKIM/SPF configuration if using a custom domain.
+- **[Check project keys]** Ensure your `.env.local` uses the correct URL and anon key for the intended Supabase project.
 
 ## Development Notes
 

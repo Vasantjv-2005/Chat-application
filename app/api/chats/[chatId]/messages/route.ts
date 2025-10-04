@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { getServerClient } from "@/lib/supabase/server"
 
+export const runtime = "nodejs"
+
 export async function GET(
   _: Request,
   context: { params: Promise<{ chatId: string }> },

@@ -33,12 +33,13 @@ export default function AuthForm() {
     const fd = new FormData(e.target as HTMLFormElement)
     const email = String(fd.get("email") || "")
     const password = String(fd.get("password") || "")
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+    const redirectBase = siteUrl && siteUrl.length > 0 ? siteUrl : (typeof window !== "undefined" ? window.location.origin : "")
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo:
-          (process as any).env?.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/onboarding`,
+        emailRedirectTo: redirectBase ? `${redirectBase}/onboarding` : undefined,
       },
     })
     setLoading(false)

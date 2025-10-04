@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getServerClient } from "@/lib/supabase/server"
 import { orderedPair } from "@/lib/utils/pair"
 
+export const runtime = "nodejs"
+
 export async function POST(req: Request) {
   const supabase = await getServerClient()
   const {
