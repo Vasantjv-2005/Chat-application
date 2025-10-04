@@ -23,8 +23,32 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  // touch the session so cookies refresh if needed
-  await supabase.auth.getSession()
+  // get the session to decide routing
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  const { pathname, origin } = request.nextUrl
+  const isApi = pathname.startsWith("/api")
+  const isStatic =
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.startsWith("/public") ||
+    pathname.startsWith("/images")
+  const isAuthRoute = pathname === "/login" || pathname === "/onboarding"
+
+  // Redirect unauthenticated users to /login for protected pages
+  if (!session && !isApi && !isStatic && !isAuthRoute) {
+    const url = new URL("/login", origin)
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from /login to /
+  if (session && pathname === "/login") {
+    const url = new URL("/", origin)
+    return NextResponse.redirect(url)
+  }
+
   return response
 }
 

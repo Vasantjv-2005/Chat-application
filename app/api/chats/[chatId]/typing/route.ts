@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server"
 import { getServerClient } from "@/lib/supabase/server"
 
-export async function POST(req: Request, { params }: { params: { chatId: string } }) {
+export async function POST(
+  req: Request,
+  context: { params: Promise<{ chatId: string }> },
+) {
+  const { chatId } = await context.params
   const supabase = await getServerClient()
   const {
     data: { user },
@@ -10,7 +14,7 @@ export async function POST(req: Request, { params }: { params: { chatId: string 
   const { isTyping } = await req.json()
   const { error } = await supabase
     .from("typing_indicators")
-    .upsert({ chat_id: params.chatId, user_id: user.id, is_typing: !!isTyping })
+    .upsert({ chat_id: chatId, user_id: user.id, is_typing: !!isTyping })
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ ok: true })
 }
