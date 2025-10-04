@@ -1,4 +1,5 @@
 import OnboardingForm from "@/components/profile/onboarding-form"
+export const dynamic = "force-dynamic"
 
 export default function OnboardingPage() {
   return (

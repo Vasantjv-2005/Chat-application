@@ -1,5 +1,6 @@
 import { getServerClient } from "@/lib/supabase/server"
 import Link from "next/link"
+export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   const supabase = await getServerClient()
@@ -32,7 +33,6 @@ export default async function HomePage() {
     <main className="min-h-dvh">
       {/* Authenticated chat shell */}
       {/* Using a server component shell to pass user info down */}
-      {/* @ts-expect-error server component */}
       <ChatShell />
     </main>
   )
@@ -46,7 +46,6 @@ async function ChatShell() {
 
   return (
     <div className="grid md:grid-cols-[320px_1fr] min-h-dvh">
-      {/* @ts-expect-error Server Component boundary passes through Client component */}
       <OnlinePresence userId={user?.id!} />
       <Sidebar userId={user?.id!} />
       <ChatWindow userId={user?.id!} />
